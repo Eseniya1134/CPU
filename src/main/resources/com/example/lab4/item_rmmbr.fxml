@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="20.0" prefWidth="50.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.lab4.ItemRmmbr">
+   <children>
+      <HBox prefHeight="30.0" prefWidth="105.0">
+         <children>
+            <Label fx:id="rmbr_numb" prefHeight="30.0" prefWidth="45.0" styleClass="TextNumber" stylesheets="@style.css" textAlignment="RIGHT" />
+            <Label prefHeight="30.0" prefWidth="5.0" text=":" textAlignment="JUSTIFY" />
+            <Label fx:id="rmbr_val" prefHeight="30.0" prefWidth="45.0" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

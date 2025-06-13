@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.lab4.HelloController">
+   <center>
+      <GridPane BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" percentWidth="62.0" />
+          <ColumnConstraints hgrow="SOMETIMES" percentWidth="38.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <GridPane>
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints percentHeight="20" vgrow="SOMETIMES" />
+                <RowConstraints percentHeight="80" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="LTpart" stylesheets="@style.css">
+                     <children>
+                        <Button fx:id="execute" layoutX="296.0" layoutY="47.0" mnemonicParsing="false" onAction="#executeInstruction" text="Выполнить очередную инструкцию" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                        <Button fx:id="add" layoutX="106.0" layoutY="13.0" mnemonicParsing="false" onAction="#openItemAddWindow" text="Добавить инструкцию" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                        <Button fx:id="reset" layoutX="296.0" layoutY="13.0" mnemonicParsing="false" onAction="#resetProgram" text="Сбросить выполнение программы" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                     </children>
+                  </AnchorPane>
+                  <ScrollPane fx:id="ScrollInstr" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                     <content>
+                        <VBox fx:id="instCont" />
+                     </content>
+                  </ScrollPane>
+                  
+               </children>
+            </GridPane>
+            <GridPane GridPane.columnIndex="1">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints percentHeight="20" vgrow="SOMETIMES" />
+                <RowConstraints percentHeight="50" vgrow="SOMETIMES" />
+                <RowConstraints percentHeight="30" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                   <AnchorPane fx:id="regItem" prefHeight="200.0" prefWidth="200.0" styleClass="RTpart" stylesheets="@style.css">
+                       <children>
+                           <Label layoutX="14.0" layoutY="20.0" prefHeight="24.0" prefWidth="24.0" text="A" textAlignment="CENTER" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="20.0" />
+                           <Label layoutX="57.0" layoutY="20.0" prefHeight="24.0" prefWidth="24.0" text="B" textAlignment="CENTER" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="57.0" AnchorPane.topAnchor="20.0" />
+                           <Label layoutX="100.0" layoutY="20.0" prefHeight="24.0" prefWidth="24.0" text="C" textAlignment="CENTER" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="20.0" />
+                           <Label layoutX="143.0" layoutY="20.0" prefHeight="24.0" prefWidth="24.0" text="D" textAlignment="CENTER" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="143.0" AnchorPane.topAnchor="20.0" />
+                           <Label fx:id="ra" layoutX="14.0" layoutY="20.0" prefHeight="24.0" prefWidth="24.0" textAlignment="CENTER" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="45.0" />
+                           <Label fx:id="rb" layoutX="57.0" layoutY="20.0" prefHeight="24.0" prefWidth="24.0" textAlignment="CENTER" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="57.0" AnchorPane.topAnchor="45.0" />
+                           <Label fx:id="rc" layoutX="100.0" layoutY="20.0" prefHeight="24.0" prefWidth="24.0" textAlignment="CENTER" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="45.0" />
+                           <Label fx:id="rd" layoutX="143.0" layoutY="20.0" prefHeight="24.0" prefWidth="24.0" textAlignment="CENTER" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="143.0" AnchorPane.topAnchor="45.0" />
+                           <Label fx:id="reg" alignment="CENTER" contentDisplay="CENTER" text="Значения регистров" textAlignment="CENTER" wrapText="true" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="3.0" />
+                       </children>
+                   </AnchorPane>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="RMpart" stylesheets="@style.css" GridPane.rowIndex="1">
+                      <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0" GridPane.rowIndex="1">
+                        <content>
+                           <GridPane fx:id="memoryGrid" hgap="20.0" prefHeight="121.0" prefWidth="228.0" vgap="10.0">
+                             <columnConstraints>
+                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="35.0" prefWidth="105.0" />
+                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="35.0" prefWidth="105.0" />
+                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="35.0" prefWidth="105.0" />
+                             </columnConstraints>
+                             <rowConstraints>
+                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                             </rowConstraints>
+                           </GridPane>
+                        </content></ScrollPane>
+                     <children>
+                        <Label fx:id="rem" alignment="CENTER" text="Состояние памяти" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="3.0" />
+                     </children></AnchorPane>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="RBpart" stylesheets="@style.css" GridPane.rowIndex="2">
+                     <children>
+                        <Label fx:id="freq" alignment="CENTER" cache="true" cacheHint="SPEED" depthTest="DISABLE" prefHeight="35.0" prefWidth="170.0" text="Частота появления инструкций" textAlignment="CENTER" wrapText="true" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="3.0" />
+                     </children></AnchorPane>
+               </children>
+            </GridPane>
+         </children>
+      </GridPane>
+   </center>
+</BorderPane>

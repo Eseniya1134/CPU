@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.lab4.ItemAdd">
+   <children>
+      <ComboBox fx:id="combolist" prefWidth="150.0" AnchorPane.bottomAnchor="34.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="34.0" />
+      <TextField fx:id="prm1" layoutX="193.0" layoutY="38.0" prefHeight="32.0" prefWidth="56.0" AnchorPane.bottomAnchor="34.0" AnchorPane.topAnchor="34.0" />
+      <TextField fx:id="prm2" layoutX="281.0" layoutY="34.0" prefHeight="32.0" prefWidth="56.0" AnchorPane.bottomAnchor="34.0" AnchorPane.topAnchor="34.0" />
+      <Button layoutX="440.0" layoutY="54.0" mnemonicParsing="false" onAction="#handleAdd" prefHeight="25.0" prefWidth="109.0" text="Добавить" />
+   </children>
+</AnchorPane>
