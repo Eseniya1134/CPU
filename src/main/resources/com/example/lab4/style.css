@@ -1,17 +1,17 @@
 .LTpart{
-    -fx-background-color: #D7D7D7;
+    -fx-background-color: #BABED8;
 }
 .LBpart{
     -fx-background-color: #F5F5F5 ;
 }
 .RTpart{
-    -fx-background-color: #A6A6A6;
+    -fx-background-color: #D3D6EC;
 }
 .RMpart{
-    -fx-background-color: #D7D7D7;
+    -fx-background-color: #BABED8;
 }
 .RBpart{
-    -fx-background-color: #A6A6A6;
+    -fx-background-color: #BABED8;
 }
 .TextNumber{
     -fx-alignment: center-right; -fx-padding: 5;

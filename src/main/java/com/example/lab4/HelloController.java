@@ -69,16 +69,17 @@ public class HelloController {
 
                 lastModifiedMemoryIndex = cpu.getLastModifiedMemoryIndex();
 
-                updateRegisterDisplay();
-                updateMemoryGrid();
 
-                String operation = command[0];
-                int newCount = historyMap.containsKey(operation) ?
-                        Integer.parseInt(historyMap.get(operation).getParam1()) + 1 : 1;
+                String operationKey = command[0];
+                int newCount = historyMap.containsKey(operationKey) ?
+                        Integer.parseInt(historyMap.get(operationKey).getParam1()) + 1 : 1;
 
-                addHistoryInstr(operation, newCount); // Обновляем или добавляем запись в историю
+                addHistoryInstr(operationKey, newCount);
 
                 System.out.println("Last modified memory index: " + lastModifiedMemoryIndex);
+
+                updateRegisterDisplay();
+                updateMemoryGrid();
                 return;
             }
         }
@@ -132,9 +133,14 @@ public class HelloController {
     // Добавление или обновление истории инструкций
     public void addHistoryInstr(String op, int count) {
         try {
-            if (historyMap.containsKey(op)) {
-                historyMap.get(op).setInstruction(op, String.valueOf(count));
+            // Нормализуем ключ (без пробелов и в верхнем регистре)
+            String key = op.trim();
+
+            if (historyMap.containsKey(key)) {
+                // Обновляем уже существующую запись
+                historyMap.get(key).setInstruction(op, String.valueOf(count));
             } else {
+                // Загружаем FXML для новой истории
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("item_history.fxml"));
                 Parent instructionPane = loader.load();
 
@@ -144,19 +150,21 @@ public class HelloController {
 
                 instCount.getChildren().add(instructionPane);
 
-                historyMap.put(op, instrHistory);
+                historyMap.put(key, instrHistory);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    // Добавление новой инструкции
+
+// Добавление новой инструкции
     public void addInstruction(String operation, String param1, String param2) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("item_instr.fxml"));
             Parent instructionPane = loader.load();
 
+            // Без приведения к верхнему регистру:
             String[] command = new String[]{operation, param1, param2};
             instructionList.add(command);
 
@@ -169,6 +177,8 @@ public class HelloController {
             e.printStackTrace();
         }
     }
+
+
 
     // Сброс программы и очистка всех данных
     public void resetProgram() {
@@ -195,12 +205,64 @@ public class HelloController {
         System.out.println("Program reset complete.");
     }
 
-    // Удаление инструкции из интерфейса
+    // Удаление инструкции из интерфейса и откат действий
     public void removeInstruction(AnchorPane a) {
-        instCont.getChildren().remove(a);
-        instCont.requestLayout();
-        scrollinstr.requestLayout();
+        // 1. Получаем индекс удаляемой инструкции
+        int index = instCont.getChildren().indexOf(a);
+
+        // 2. Удаляем визуально из VBox
+        if (index >= 0) {
+            instCont.getChildren().remove(index);
+        }
+
+        // 3. Удаляем из списка команд (instructionList)
+        if (index >= 0 && index < instructionList.size()) {
+            instructionList.remove(index);
+        }
+
+        // 4. Сброс CPU и всех вспомогательных данных
+        cpu.resetMemory();
+        cpu.resetRegisters();
+        executedInstructions.clear();
+        lastHighlightedNode = null;
+        lastModifiedMemoryIndex = -1;
+
+        // 5. Очищаем историю (VBox и Map)
+        historyMap.clear();
+        instCount.getChildren().clear();
+
+        // 6. Переисполняем оставшиеся инструкции
+        Map<String, Integer> opCounts = new HashMap<>();
+        for (int i = 0; i < instructionList.size(); i++) {
+            String[] command = instructionList.get(i);
+            cpu.loadInstruction(command[0], Arrays.copyOfRange(command, 1, command.length));
+            cpu.exec();
+            executedInstructions.add(command);
+
+            // Подсчитываем частоту каждой операции
+            String opKey = command[0];
+            opCounts.put(opKey, opCounts.getOrDefault(opKey, 0) + 1);
+
+            // Обновляем подсветку (последняя будет активна)
+            Node currentNode = instCont.getChildren().get(i);
+            if (i == instructionList.size() - 1) {
+                currentNode.setStyle("-fx-background-color: #6ddeb6;");
+                lastHighlightedNode = currentNode;
+            } else {
+                currentNode.setStyle("");
+            }
+        }
+
+        // 7. Перерисовываем историю появления инструкций
+        for (Map.Entry<String, Integer> entry : opCounts.entrySet()) {
+            addHistoryInstr(entry.getKey(), entry.getValue());
+        }
+
+        // 8. Обновляем интерфейс
+        updateRegisterDisplay();
+        updateMemoryGrid();
     }
+
 
     // Перемещение инструкции вверх
     public void moveInstructionUp(ItemInstr itemController) {

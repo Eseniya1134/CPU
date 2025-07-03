@@ -3,11 +3,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="itemHistory" prefHeight="50.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.lab4.ItemInstr">
+<AnchorPane fx:id="itemHistory" maxHeight="34.0" prefHeight="7.0" prefWidth="286.0" styleClass="RTpart" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.lab4.ItemHistory">
     <children>
-
-        <Label fx:id="op1" layoutX="14.0" layoutY="8.0" prefHeight="34.0" prefWidth="191.0" AnchorPane.bottomAnchor="8.0" AnchorPane.topAnchor="8.0" />
-        <Label fx:id="cnt1" layoutX="216.0" layoutY="8.0" prefHeight="34.0" prefWidth="51.0" AnchorPane.bottomAnchor="8.0" AnchorPane.topAnchor="8.0" />
-
+        <Label fx:id="op1" layoutX="14.0" layoutY="8.0" prefHeight="20.0" prefWidth="191.0" AnchorPane.bottomAnchor="6.0" AnchorPane.topAnchor="8.0" />
+        <Label fx:id="cnt1" layoutX="216.0" layoutY="8.0" prefHeight="20.0" prefWidth="51.0" AnchorPane.bottomAnchor="9.0" AnchorPane.topAnchor="8.0" />
     </children>
 </AnchorPane>

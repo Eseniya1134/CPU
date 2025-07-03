@@ -33,7 +33,11 @@
                   </AnchorPane>
                   <ScrollPane fx:id="ScrollInstr" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                      <content>
-                        <VBox fx:id="instCont" />
+                        <VBox fx:id="instCont" stylesheets="@style.css" spacing="10">
+                            <padding>
+                                <Insets bottom="7" left="7" right="7" top="7" />
+                            </padding>
+                        </VBox>
                      </content>
                   </ScrollPane>
 
@@ -63,9 +67,9 @@
                        </children>
                    </AnchorPane>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="RMpart" stylesheets="@style.css" GridPane.rowIndex="1">
-                      <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0" GridPane.rowIndex="1">
+                      <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" stylesheets="@style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0" GridPane.rowIndex="1">
                         <content>
-                           <GridPane fx:id="memoryGrid" hgap="20.0" prefHeight="48.0" prefWidth="228.0" vgap="10.0">
+                           <GridPane fx:id="memoryGrid" hgap="20.0" prefHeight="48.0" prefWidth="228.0" stylesheets="@style.css" vgap="10.0">
                              <columnConstraints>
                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="35.0" prefWidth="105.0" />
                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="35.0" prefWidth="105.0" />
@@ -75,7 +79,7 @@
                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                              </rowConstraints>
                               <padding>
-                                 <Insets top="7.0" />
+                                 <Insets bottom="7.0" right="7.0" top="7.0" />
                               </padding>
                            </GridPane>
                         </content></ScrollPane>
@@ -85,10 +89,12 @@
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="RBpart" stylesheets="@style.css" GridPane.rowIndex="2">
                       <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0" GridPane.rowIndex="1">
                         <content>
-                           <VBox fx:id="instCount">
-                              <padding>
-                                 <Insets top="7.0" />
-                              </padding></VBox>
+                            <VBox fx:id="instCount" spacing="10">
+                                <padding>
+                                    <Insets bottom="7" left="7" right="7" top="7" />
+                                </padding>
+                            </VBox>
+
                         </content></ScrollPane>
                      <children>
                         <Label fx:id="freq" alignment="CENTER" text="Частота появления инструкций" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="3.0" />
