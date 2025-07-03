@@ -8,7 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane; // Убедитесь, что вы импортируете правильный класс
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -21,71 +21,72 @@ public class HelloController {
     private ItemAdd itemAdd;
 
     @FXML
-    private Label ra, rb, rc, rd;
+    private Label ra, rb, rc, rd; // Метки для отображения значений регистров
+
     private BCpu cpu;
 
     private List<String[]> instructionList = new ArrayList<>(); // Все инструкции
+    private Map<String, ItemHistory> historyMap = new HashMap<>(); // История инструкций с их количеством выполнений
+
     private Set<String[]> executedInstructions = new HashSet<>(); // Выполненные инструкции
     private Node lastHighlightedNode = null; // Ссылка на последнюю подсвеченную инструкцию
     private int lastModifiedMemoryIndex = -1; // Индекс последней изменённой ячейки
 
     @FXML
-    private AnchorPane regInf;
+    private AnchorPane regInf; // Панель для отображения информации о регистрах
 
-    //отправка в bcpu инфы о функциях
+    // Инициализация контроллера и CPU
     @FXML
     public void initialize() {
         cpu = new BCpu();
-
-        // Установка меток для BCpu
         cpu.setLabels(ra, rb, rc, rd);
         System.out.println("Labels set in CPU.");
         cpu.testRegisterUpdate();
     }
 
-    //получение инфы
+    // Выполнение одной инструкции и обновление интерфейса
     @FXML
     private void executeInstruction() {
         System.out.println("Execute button pressed.");
 
-        // Находим следующую невыполненную операцию
         for (int i = 0; i < instructionList.size(); i++) {
             String[] command = instructionList.get(i);
             if (!executedInstructions.contains(command)) {
                 System.out.println("Executing command: " + Arrays.toString(command));
 
-                // Выполняем операцию через CPU
                 cpu.loadInstruction(command[0], Arrays.copyOfRange(command, 1, command.length));
                 cpu.exec();
 
-                // Помечаем эту инструкцию как выполненную
                 executedInstructions.add(command);
 
-                // Сбрасываем подсветку с предыдущего узла
                 if (lastHighlightedNode != null) {
-                    lastHighlightedNode.setStyle(""); // Убираем пользовательский стиль
+                    lastHighlightedNode.setStyle("");
                 }
 
-                // Подсвечиваем текущий узел
                 Node currentNode = instCont.getChildren().get(i);
-                currentNode.setStyle("-fx-background-color: #6ddeb6;"); // Пример подсветки
-                lastHighlightedNode = currentNode; // Сохраняем текущий узел как последний подсвеченный
+                currentNode.setStyle("-fx-background-color: #6ddeb6;");
+                lastHighlightedNode = currentNode;
 
-                // Обновляем отображение регистров
                 lastModifiedMemoryIndex = cpu.getLastModifiedMemoryIndex();
 
                 updateRegisterDisplay();
                 updateMemoryGrid();
-                System.out.println("Last modified memory index: " + lastModifiedMemoryIndex);
 
-                return; // Выполняем только одну операцию за раз
+                String operation = command[0];
+                int newCount = historyMap.containsKey(operation) ?
+                        Integer.parseInt(historyMap.get(operation).getParam1()) + 1 : 1;
+
+                addHistoryInstr(operation, newCount); // Обновляем или добавляем запись в историю
+
+                System.out.println("Last modified memory index: " + lastModifiedMemoryIndex);
+                return;
             }
         }
 
         System.out.println("No more instructions to execute!");
     }
 
-    //обновление регистров
+    // Обновление значений регистров
     private void updateRegisterDisplay() {
         int[] registers = cpu.getRegisters();
         ra.setText(String.valueOf(registers[0]));
@@ -94,27 +95,19 @@ public class HelloController {
         rd.setText(String.valueOf(registers[3]));
     }
 
-
-    //связь с окном добавления функций
+    // Открытие окна добавления новой инструкции
     @FXML
     private void openItemAddWindow() {
         try {
-            // Загружаем FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("item_add.fxml"));
             Parent root = loader.load();
 
-            // Получаем контроллер ItemAdd
             ItemAdd addController = loader.getController();
-
-            // Устанавливаем ссылки между контроллерами
             addController.setMainController(this);
             this.itemAdd = addController;
 
-            // Проверяем, что ItemAdd успешно инициализирован
             System.out.println("ItemAdd initialized: " + (itemAdd != null));
 
-
-            // Отображаем окно
             Stage stage = new Stage();
             stage.setScene(new Scene(root, 600, 100));
             stage.show();
@@ -124,147 +117,145 @@ public class HelloController {
     }
 
     @FXML
-    private ScrollPane scrollinstr;
+    private ScrollPane scrollinstr; // Скроллер для инструкций
 
     @FXML
     private VBox instCont; // Контейнер для инструкций
 
     @FXML
-    private AnchorPane regItem;
+    private AnchorPane regItem; // Панель для регистров
+
+    @FXML
+    private VBox instCount;
 
 
-//добавление одной панелевой функции на скроллер
+    // Добавление или обновление истории инструкций
+    public void addHistoryInstr(String op, int count) {
+        try {
+            if (historyMap.containsKey(op)) {
+                historyMap.get(op).setInstruction(op, String.valueOf(count));
+            } else {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("item_history.fxml"));
+                Parent instructionPane = loader.load();
+
+                ItemHistory instrHistory = loader.getController();
+                instrHistory.setInstruction(op, String.valueOf(count));
+                instrHistory.setMainController(this);
+
+                instCount.getChildren().add(instructionPane);
+
+                historyMap.put(op, instrHistory);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Добавление новой инструкции
     public void addInstruction(String operation, String param1, String param2) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("item_instr.fxml"));
             Parent instructionPane = loader.load();
 
-            // Создаем массив данных инструкции
-            String[] command = new String[] {operation, param1, param2};
+            String[] command = new String[]{operation, param1, param2};
             instructionList.add(command);
 
-        // Устанавливаем данные в интерфейс инструкции
             ItemInstr instrController = loader.getController();
             instrController.setInstruction(operation, param1, param2);
             instrController.setMainController(this);
 
-        // Добавляем в VBox
             instCont.getChildren().add(instructionPane);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
+        }
     }
-}
 
-    //сброс всех функций
-
+    // Сброс программы и очистка всех данных
     public void resetProgram() {
         System.out.println("Resetting the program...");
 
-        // Очищаем список инструкций
         instructionList.clear();
         executedInstructions.clear();
-        Object lastExecutedOperation = null;
+        historyMap.clear();
 
-        // Очищаем отображение инструкций
         instCont.getChildren().clear();
 
-        // Сбрасываем память и регистры CPU
         if (cpu != null) {
-            cpu.resetMemory(); // Метод для очистки памяти CPU
-            cpu.resetRegisters(); // Метод для сброса регистров
+            cpu.resetMemory();
+            cpu.resetRegisters();
         }
 
-        // Сбрасываем отображение регистров
         ra.setText("0");
         rb.setText("0");
         rc.setText("0");
         rd.setText("0");
 
-        // Очищаем сетку памяти
         memoryGrid.getChildren().clear();
 
         System.out.println("Program reset complete.");
     }
 
-
-
-    //удаление панелевых функций на скроллер
+    // Удаление инструкции из интерфейса
     public void removeInstruction(AnchorPane a) {
         instCont.getChildren().remove(a);
-        // Обновление интерфейса
-        instCont.requestLayout(); // Перерисовка VBox
-        scrollinstr.requestLayout(); // Перерисовка ScrollPane
-
+        instCont.requestLayout();
+        scrollinstr.requestLayout();
     }
 
-    //инструкция верх
+    // Перемещение инструкции вверх
     public void moveInstructionUp(ItemInstr itemController) {
         Node currentNode = itemController.getRoot();
         int currentIndex = instCont.getChildren().indexOf(currentNode);
 
         if (currentIndex > 0) {
             ObservableList<Node> children = instCont.getChildren();
-
-            // Удаляем текущий узел
             Node nodeToMove = children.remove(currentIndex);
-
-            // Вставляем его на позицию выше
             children.add(currentIndex - 1, nodeToMove);
-
         } else {
             System.out.println("Cannot move up. Already at the top.");
         }
     }
 
-    //инструкция вниз
+    // Перемещение инструкции вниз
     public void moveInstructionDown(ItemInstr itemController) {
         Node currentNode = itemController.getRoot();
         int currentIndex = instCont.getChildren().indexOf(currentNode);
 
-        if (currentIndex > 0) {
+        if (currentIndex < instCont.getChildren().size() - 1) {
             ObservableList<Node> children = instCont.getChildren();
-
-            // Удаляем текущий узел
             Node nodeToMove = children.remove(currentIndex);
-
-            // Вставляем его на позицию выше
             children.add(currentIndex + 1, nodeToMove);
-
         } else {
-            System.out.println("Cannot move up. Already at the top.");
+            System.out.println("Cannot move down. Already at the bottom.");
         }
     }
 
     @FXML
-    private GridPane memoryGrid; // GridPane внутри ScrollPane для отображения ячеек памяти
+    private GridPane memoryGrid; // Сетка памяти
 
+    // Заполнение сетки памяти
     private void populateMemoryGrid() {
-        memoryGrid.getChildren().clear(); // Очищаем текущую сетку
+        memoryGrid.getChildren().clear();
 
-        int[] memory = cpu.getMemory(); // Получаем массив памяти (предположительно 1024 элемента)
+        int[] memory = cpu.getMemory();
 
         try {
             for (int i = 0; i < memory.length; i++) {
-                // Загружаем FXML для каждой ячейки
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("item_rmmbr.fxml"));
                 Pane cellPane = loader.load();
 
-                // Настраиваем контроллер ячейки
                 ItemRmmbr cellController = loader.getController();
                 cellController.setCellData(i, memory[i]);
 
-                // Подсвечиваем последнюю модифицированную ячейку
                 if (i == lastModifiedMemoryIndex) {
-                    cellPane.setStyle("-fx-background-color: #6ddeb6;"); // Пример подсветки
+                    cellPane.setStyle("-fx-background-color: #6ddeb6;");
                 } else {
-                    cellPane.setStyle("-fx-background-color: transparent;"); // Сбрасываем стиль для остальных
+                    cellPane.setStyle("-fx-background-color: transparent;");
                 }
 
-                // Определяем позицию ячейки в GridPane
-                int col = i % 3; // 3 колонок
+                int col = i % 3;
                 int row = i / 3;
 
-                // Добавляем ячейку в GridPane
                 memoryGrid.add(cellPane, col, row);
             }
         } catch (IOException e) {
@@ -273,17 +264,8 @@ public class HelloController {
         }
     }
 
-
+    // Обновление сетки памяти
     public void updateMemoryGrid() {
         populateMemoryGrid();
     }
-
-
 }
-
-
-
-
-
-
-

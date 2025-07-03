@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="itemHistory" prefHeight="50.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.lab4.ItemInstr">
+    <children>
+
+        <Label fx:id="op1" layoutX="14.0" layoutY="8.0" prefHeight="34.0" prefWidth="191.0" AnchorPane.bottomAnchor="8.0" AnchorPane.topAnchor="8.0" />
+        <Label fx:id="cnt1" layoutX="216.0" layoutY="8.0" prefHeight="34.0" prefWidth="51.0" AnchorPane.bottomAnchor="8.0" AnchorPane.topAnchor="8.0" />
+
+    </children>
+</AnchorPane>
